@@ -82,6 +82,22 @@
                         <!-- Post content-->
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{ post.content }}</p>
+                        {% if post.file_upload %}
+                            <a class="btn btn-primary" href="{{ post.file_upload.url }}" role="button" download>
+                                Donwload:
+
+                                {% if post.get_file_ext == 'xlsx' or post.get_file_ext == 'xls' %}
+                                    <i class="fas fa-file-excel"></i>
+                                {% elif post.get_file_ext == 'csv' %}
+                                    <i class="fas fa-file-csv"></i>
+                                {% elif post.get_file_ext == 'doc' or post.get_file_ext == 'docx' %}
+                                    <i class="fas fa-file-word"></i>
+                                {% else %}
+                                    <i class="fas fa-file"></i>
+                                {% endif %}
+                                {{ post.get_file_name }}
+                            </a>
+                        {% endif %}
                         </section>
                     </article>
                     <!-- Comments section-->
@@ -181,5 +197,6 @@
         <script src="js/scripts.js"></script>
         <!-- Custom styles for this template -->
         <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}" media="screen">
+        <script src="https://kit.fontawesome.com/6b81a2d3f8.js" crossorigin="anonymous"></script>
     </body>
 </html>
