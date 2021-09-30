@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>blog</title>
+    <title>Blog</title>
     <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
     <script src="https://kit.fontawesome.com/6b81a2d3f8.js" crossorigin="anonymous"></script>
 </head>
@@ -23,7 +23,7 @@
                     <a class="nav-link" href="./blog_list.html">Blog</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="./about_me">About me</a>
+                    <a class="nav-link" href="./about_me">About Me</a>
                   </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,11 +77,13 @@
 
     <div class="container my-3">
         <div class="row">
-            <div class="col-md-8 col-lg-9">
-                <h1>blog</h1>
+            <div class="col-md-8 col-lg-9" id="main-area">
+                <h1>Blog</h1>
 
-                <!-- Blog post-->
+                {% if post_list.exists %}
+
                 {% for p in post_list %}
+                <!-- Blog post-->
                 <div class="card mb-4">
                     {% if p.head_image %}
                         <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head image" /></a>
@@ -89,7 +91,7 @@
                         <img class="card-img-top" src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image">
                     {% endif %}
                     <div class="card-body">
-<!--                        <div class="small text-muted">January 1, 2021</div>-->
+                        <!--<div class="small text-muted">January 1, 2021</div>-->
                         <h2 class="card-title h4">{{ p.title }}</h2>
                         {% if p.hook_text %}
                             <h5 class="text-muted">{{ p.hook_text }}</h5>
@@ -103,6 +105,9 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                    <h3>아직 게시물이 없습니다</h3>
+                {% endif %}
 
                 <!-- Pagination-->
                 <nav aria-label="Pagination">
