@@ -168,20 +168,47 @@ class TestView(TestCase):
         # 2.6 첫 번째 포스트 내용이 포스트 영역에 있다
         self.assertIn(self.post_001.content, post_area.text)
 
-        def test_category_page(self):
-            response = self.client.get(self.category_programming.get_absolute_url())
-            self.assertEqual(response.status_code, 200)
+    def test_category_page(self):
+        response = self.client.get(self.category_programming.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
 
-            soup = bs(response.content, 'html.parser')
-            self.navbar_test(soup)
-            self.category_card_test(soup)
+        soup = bs(response.content, 'html.parser')
+        self.navbar_test(soup)
+        self.category_card_test(soup)
 
-            self.assertIn(self.category_programming.name, soup.h1.text)
+        self.assertIn(self.category_programming.name, soup.h1.text)
 
-            main_area = soup.find('div', id='main-area')
-            self.assertIn(self.category_programming.name, main_area.text)
-            self.assertIn(self.post_001.title, main_area.text)
-            self.assertNotIn(self.post_002.title, main_area.text)
-            self.assertNotIn(self.post_003.title, main_area.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn(self.category_programming.name, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertNotIn(self.post_002.title, main_area.text)
+        self.assertNotIn(self.post_003.title, main_area.text)
+
+    def test_create_post(self):
+        # 로긴하지 않으면 status code 200 되면 안 됨
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
+
+        # 로긴한다
+        self.client.login(username='naru', password='somepassword')
+
+        response = self.client.get('/blog/create_post/')
+        self.assertEqual(response.status_code, 200)
+        soup = bs(response.content, 'html.parser')
+
+        self.assertEqual('Create Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Create New Post', main_area.text)
+
+        self.client.post(
+            '/blog/create_post/',
+            {
+                'title': 'Post Form 만들기',
+                'content': 'Post Form 페이지 만들자',
+            }
+        )
+        last_post = Post.objects.last()
+        self.assertEqual(last_post.title, 'Post Form 만들기')
+        self.assertEqual(last_post.author.username, 'naru')
 
 
