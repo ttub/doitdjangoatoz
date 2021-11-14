@@ -127,7 +127,6 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                         tag.slug = slugify(t, allow_unicode=True)
                         tag.save()
                     self.object.tags.add(tag)
-
             return response
         else:
             return redirect('/blog/')
